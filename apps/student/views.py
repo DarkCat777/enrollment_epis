@@ -7,7 +7,7 @@ from apps.course.serializers import CourseSerializer
 from apps.group.models import Group
 from apps.group.serializers import GroupSerializer
 from apps.student.models import Student
-from apps.student.serializers import StudentSerializer
+from apps.student.serializers import StudentSerializer, StudentDetailSerializer
 
 
 class StudentListCreateAPIView(generics.ListCreateAPIView):
@@ -30,7 +30,7 @@ class StudentEnrollmentSerializer(serializers.BaseSerializer):
 
     def to_representation(self, instance: Student):
         groups = instance.enrollments.all()
-        json = {'student': StudentSerializer(instance).data}
+        json = {'student': StudentDetailSerializer(instance).data}
         json_list = []
         for group in groups:
             json_list += [{
@@ -44,6 +44,6 @@ class StudentEnrollmentSerializer(serializers.BaseSerializer):
         return json
 
 
-class EnrollmentListAPIView(generics.ListAPIView):
+class EnrollmentRetrieveAPIView(generics.RetrieveAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentEnrollmentSerializer
